@@ -8,6 +8,10 @@ import WatchRemoveEventPlugin from './plugins/watch-remove-event-plugin'
 import DynamicEntryPlugin from './plugins/dynamic-entry-plugin'
 import DetachPlugin from './plugins/detach-plugin'
 
+function buildPath () {
+  return (process.env.BUILD_PATH || process.cwd())
+};
+
 export default async function createCompiler (dir, { hotReload = false } = {}) {
   dir = resolve(dir)
 
@@ -19,7 +23,7 @@ export default async function createCompiler (dir, { hotReload = false } = {}) {
     entry[join('bundles', p)] = defaultEntries.concat(['./' + p])
   }
 
-  const nextPagesDir = join(__dirname, '..', '..', 'pages')
+  const nextPagesDir = join(buildPath(), '..', '..', 'pages')
 
   const errorEntry = join('bundles', 'pages', '_error.js')
   const defaultErrorPath = join(nextPagesDir, '_error.js')
@@ -31,7 +35,7 @@ export default async function createCompiler (dir, { hotReload = false } = {}) {
   const errorDebugPath = join(nextPagesDir, '_error-debug.js')
   entry[errorDebugEntry] = errorDebugPath
 
-  const nodeModulesDir = join(__dirname, '..', '..', '..', 'node_modules')
+  const nodeModulesDir = join(buildPath(), 'node_modules')
 
   const plugins = [
     new webpack.DefinePlugin({
