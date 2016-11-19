@@ -1,10 +1,10 @@
 {
   "name": "next",
   "version": "1.1.1",
-  "description": "Minimalistic framework for server-rendered React applications",
+  "description": "my personal stuff",
   "main": "./dist/lib/index.js",
   "license": "MIT",
-  "repository": "zeit/next.js",
+  "repository": "sigurthor/next.js",
   "files": [
     "dist",
     "link.js",
