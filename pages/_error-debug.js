@@ -38,16 +38,22 @@ const styles = {
   }),
 
   errorDebug: style({
-    height: '100%',
+    height: '100vh',
     padding: '16px',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   }),
 
   message: style({
     fontFamily: '"SF Mono", "Roboto Mono", "Fira Mono", menlo-regular, monospace',
     fontSize: '10px',
     color: '#fbe7f1',
-    margin: 0
+    margin: 0,
+    whiteSpace: 'pre-wrap',
+    wordWrap: 'break-word'
   }),
 
   heading: style({
@@ -63,7 +69,7 @@ const styles = {
 // https://github.com/babel/babel/blob/master/packages/babel-code-frame/src/index.js
 
 ansiHTML.setColors({
-  reset: 'fff',
+  reset: ['fff', 'a6004c'],
   darkgrey: 'e54590',
   yellow: 'ee8cbb',
   green: 'f2a2c7',

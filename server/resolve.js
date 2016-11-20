@@ -1,7 +1,7 @@
 import { join, sep } from 'path'
 import fs from 'mz/fs'
 
-export default async function resolve (id) {
+export default async function resolve(id) {
   const paths = getPaths(id)
   for (const p of paths) {
     if (await isFile(p)) {
@@ -14,7 +14,7 @@ export default async function resolve (id) {
   throw err
 }
 
-export function resolveFromList (id, files) {
+export function resolveFromList(id, files) {
   const paths = getPaths(id)
   const set = new Set(files)
   for (const p of paths) {
@@ -22,7 +22,8 @@ export function resolveFromList (id, files) {
   }
 }
 
-function getPaths (id) {
+function getPaths(id) {
+  console.log('path', id);
   const i = sep === '/' ? id : id.replace(/\//g, sep)
 
   let parts = i.split(sep)
@@ -39,7 +40,7 @@ function getPaths (id) {
   ]
 }
 
-async function isFile (p) {
+async function isFile(p) {
   let stat
   try {
     stat = await fs.stat(p)
