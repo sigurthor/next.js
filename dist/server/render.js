@@ -9,6 +9,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
 var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
@@ -25,13 +29,13 @@ var render = exports.render = function () {
         _ref2$staticMarkup = _ref2.staticMarkup,
         staticMarkup = _ref2$staticMarkup === undefined ? false : _ref2$staticMarkup;
 
-    var path, mod, Component, props, component, _renderStatic, html, css, ids, head, config, doc;
+    var _getPath, _getPath$path, path, params, mod, Component, props, component, _renderStatic, html, css, ids, head, config, doc;
 
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            path = getPath(url);
+            _getPath = getPath(url), _getPath$path = _getPath.path, path = _getPath$path === undefined ? cpath : _getPath$path, params = _getPath.params;
             _context.next = 3;
             return (0, _require2.default)((0, _path.join)(dir, '.next', 'dist', 'pages', path));
 
@@ -39,7 +43,9 @@ var render = exports.render = function () {
             mod = _context.sent;
             Component = mod.default || mod;
             _context.next = 7;
-            return Component.getInitialProps ? Component.getInitialProps(ctx) : {};
+            return Component.getInitialProps ? Component.getInitialProps((0, _extends3.default)({}, ctx, {
+              params: params
+            })) : {};
 
           case 7:
             props = _context.sent;
@@ -98,18 +104,21 @@ var renderJSON = exports.renderJSON = function () {
         _ref4$dir = _ref4.dir,
         dir = _ref4$dir === undefined ? process.cwd() : _ref4$dir;
 
-    var path, component;
+    var _getPath2, path, component;
+
     return _regenerator2.default.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            path = getPath(url);
+            _getPath2 = getPath(url), path = _getPath2.path;
             _context2.next = 3;
             return (0, _read2.default)((0, _path.join)(dir, '.next', 'bundles', 'pages', path));
 
           case 3:
             component = _context2.sent;
-            return _context2.abrupt('return', { component: component });
+            return _context2.abrupt('return', {
+              component: component
+            });
 
           case 5:
           case 'end':
@@ -164,6 +173,8 @@ var _app = require('../lib/app');
 
 var _app2 = _interopRequireDefault(_app);
 
+var _reactRouter = require('react-router');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function errorToJSON(err) {
@@ -171,18 +182,37 @@ function errorToJSON(err) {
       message = err.message,
       stack = err.stack;
 
-  var json = { name: name, message: message, stack: stack };
+  var json = {
+    name: name,
+    message: message,
+    stack: stack
+  };
 
   if (name === 'ModuleBuildError') {
     // webpack compilation error
     var rawRequest = err.module.rawRequest;
 
-    json.module = { rawRequest: rawRequest };
+    json.module = {
+      rawRequest: rawRequest
+    };
   }
 
   return json;
 }
 
 function getPath(url) {
-  return (0, _url.parse)(url || '/').pathname.replace(/\.json$/, '');
+  var params = {};
+  var cpath = url.replace(/\/$/, '') || '/';
+  var match = (0, _reactRouter.matchPattern)('/test/:param1/:param2', {
+    pathname: url
+  }, false, null);
+  if (match) {
+    params = match.params;
+    url = cpath.slice(0, cpath.indexOf('/p')).replace(/\.json$/, '');
+  }
+  return {
+    path: (0, _url.parse)(url || '/').pathname.replace(/\.json$/, ''),
+    params: params,
+    cpath: cpath
+  };
 }

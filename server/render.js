@@ -8,22 +8,22 @@ import read from './read'
 import getConfig from './config'
 import Router from '../lib/router'
 import Document from '../lib/document'
-import Head, {defaultHead} from '../lib/head'
+import Head, { defaultHead } from '../lib/head'
 import App from '../lib/app'
+import { matchPattern } from 'react-router'
 
-export async function render (url, ctx = {}, {
-  dir = process.cwd(),
-  dev = false,
-  staticMarkup = false
-} = {}) {
-  const path = getPath(url)
+export async function render(url, ctx = {}, {dir = process.cwd(), dev = false, staticMarkup = false} = {}) {
+  const {path = cpath, params} = getPath(url)
   const mod = await requireModule(join(dir, '.next', 'dist', 'pages', path))
   const Component = mod.default || mod
 
-  const props = await (Component.getInitialProps ? Component.getInitialProps(ctx) : {})
+  const props = await (Component.getInitialProps ? Component.getInitialProps({
+    ...ctx,
+    params
+  }) : {})
   const component = await read(join(dir, '.next', 'bundles', 'pages', path))
 
-  const { html, css, ids } = renderStatic(() => {
+  const {html, css, ids} = renderStatic(() => {
     const app = createElement(App, {
       Component,
       props,
@@ -54,25 +54,46 @@ export async function render (url, ctx = {}, {
   return '<!DOCTYPE html>' + renderToStaticMarkup(doc)
 }
 
-export async function renderJSON (url, { dir = process.cwd() } = {}) {
-  const path = getPath(url)
+export async function renderJSON(url, {dir = process.cwd()} = {}) {
+  const {path} = getPath(url)
   const component = await read(join(dir, '.next', 'bundles', 'pages', path))
-  return { component }
+  return {
+    component
+  }
 }
 
-export function errorToJSON (err) {
-  const { name, message, stack } = err
-  const json = { name, message, stack }
+export function errorToJSON(err) {
+  const {name, message, stack} = err
+  const json = {
+    name,
+    message,
+    stack
+  }
 
   if (name === 'ModuleBuildError') {
     // webpack compilation error
-    const { module: { rawRequest } } = err
-    json.module = { rawRequest }
+    const {module: {rawRequest}} = err
+    json.module = {
+      rawRequest
+    }
   }
 
   return json
 }
 
-function getPath (url) {
-  return parse(url || '/').pathname.replace(/\.json$/, '')
+function getPath(url) {
+  var params = {};
+  var cpath = url.replace(/\/$/, '') || '/';
+  var match = matchPattern('/test/:param1/:param2', {
+    pathname: url
+  }, false, null);
+  if (match) {
+    params = match.params;
+    url = cpath.slice(0, cpath.indexOf('/p')).replace(/\.json$/, '');
+  }
+  return {
+    path: parse(url || '/').pathname.replace(/\.json$/, ''),
+    params,
+    cpath
+  }
 }

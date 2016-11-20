@@ -46,6 +46,8 @@ var _shallowEquals = require('./shallow-equals');
 
 var _shallowEquals2 = _interopRequireDefault(_shallowEquals);
 
+var _reactRouter = require('react-router');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Router = function () {
@@ -55,7 +57,7 @@ var Router = function () {
     var parsed = (0, _url.parse)(url, true);
 
     // represents the current component key
-    this.route = toRoute(parsed.pathname);
+    this.route = toRoute(parsed.pathname).route;
 
     // set up the component cache (by route keys)
     this.components = (0, _defineProperty3.default)({}, this.route, initialData);
@@ -82,7 +84,7 @@ var Router = function () {
           pathname = _parse.pathname,
           query = _parse.query;
 
-      var route = (e.state || {}).route || toRoute(pathname);
+      var route = (e.state || {}).route || toRoute(pathname).route;
 
       _promise2.default.resolve().then((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
         var data, ctx, props;
@@ -95,7 +97,10 @@ var Router = function () {
 
               case 2:
                 data = _context.sent;
-                ctx = (0, _extends3.default)({}, data.ctx, { pathname: pathname, query: query });
+                ctx = (0, _extends3.default)({}, data.ctx, {
+                  pathname: pathname,
+                  query: query
+                });
                 _context.next = 6;
                 return _this.getInitialProps(data.Component, ctx);
 
@@ -104,7 +109,9 @@ var Router = function () {
 
 
                 _this.route = route;
-                _this.set(getURL(), (0, _extends3.default)({}, data, { props: props }));
+                _this.set(getURL(), (0, _extends3.default)({}, data, {
+                  props: props
+                }));
 
               case 9:
               case 'end':
@@ -125,7 +132,9 @@ var Router = function () {
     key: 'update',
     value: function update(route, Component) {
       var data = this.components[route] || {};
-      var newData = (0, _extends3.default)({}, data, { Component: Component });
+      var newData = (0, _extends3.default)({}, data, {
+        Component: Component
+      });
       this.components[route] = newData;
 
       if (route === this.route) {
@@ -161,7 +170,10 @@ var Router = function () {
 
               case 9:
                 data = _context2.sent;
-                ctx = (0, _extends3.default)({}, data.ctx, { pathname: pathname, query: query });
+                ctx = (0, _extends3.default)({}, data.ctx, {
+                  pathname: pathname,
+                  query: query
+                });
                 _context2.next = 13;
                 return this.getInitialProps(data.Component, ctx);
 
@@ -186,7 +198,9 @@ var Router = function () {
 
               case 21:
 
-                this.notify((0, _extends3.default)({}, data, { props: props }));
+                this.notify((0, _extends3.default)({}, data, {
+                  props: props
+                }));
 
               case 22:
               case 'end':
@@ -221,66 +235,75 @@ var Router = function () {
     key: 'change',
     value: function () {
       var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(method, route, url) {
-        var _parse3, pathname, query, data, props, ctx;
+        var _parse3, pathname, query, params, data, props, ctx;
 
         return _regenerator2.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 _parse3 = (0, _url.parse)(url, true), pathname = _parse3.pathname, query = _parse3.query;
+                params = toRoute(pathname).params;
 
 
-                if (!route) route = toRoute(pathname);
+                if (!route) route = toRoute(pathname).route;
 
                 this.abortComponentLoad();
 
                 data = void 0;
                 props = void 0;
-                _context3.prev = 5;
-                _context3.next = 8;
+                _context3.prev = 6;
+                _context3.next = 9;
                 return this.fetchComponent(route);
 
-              case 8:
+              case 9:
                 data = _context3.sent;
-                ctx = (0, _extends3.default)({}, data.ctx, { pathname: pathname, query: query });
-                _context3.next = 12;
+                ctx = (0, _extends3.default)({}, data.ctx, {
+                  pathname: pathname,
+                  query: query,
+                  params: params
+                });
+                _context3.next = 13;
                 return this.getInitialProps(data.Component, ctx);
 
-              case 12:
+              case 13:
                 props = _context3.sent;
-                _context3.next = 20;
+                _context3.next = 21;
                 break;
 
-              case 15:
-                _context3.prev = 15;
-                _context3.t0 = _context3['catch'](5);
+              case 16:
+                _context3.prev = 16;
+                _context3.t0 = _context3['catch'](6);
 
                 if (!_context3.t0.cancelled) {
-                  _context3.next = 19;
+                  _context3.next = 20;
                   break;
                 }
 
                 return _context3.abrupt('return', false);
 
-              case 19:
+              case 20:
                 throw _context3.t0;
 
-              case 20:
+              case 21:
 
                 if (getURL() !== url) {
-                  window.history[method]({ route: route }, null, url);
+                  window.history[method]({
+                    route: route
+                  }, null, url);
                 }
 
                 this.route = route;
-                this.set(url, (0, _extends3.default)({}, data, { props: props }));
+                this.set(url, (0, _extends3.default)({}, data, {
+                  props: props
+                }));
                 return _context3.abrupt('return', true);
 
-              case 24:
+              case 25:
               case 'end':
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[5, 15]]);
+        }, _callee3, this, [[6, 16]]);
       }));
 
       function change(_x2, _x3, _x4) {
@@ -314,12 +337,13 @@ var Router = function () {
       var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(url) {
         var _this2 = this;
 
-        var route, data;
+        var _toRoute, _toRoute$route, route, path, params, data;
+
         return _regenerator2.default.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                route = toRoute((0, _url.parse)(url).pathname);
+                _toRoute = toRoute((0, _url.parse)(url).pathname), _toRoute$route = _toRoute.route, route = _toRoute$route === undefined ? cpath : _toRoute$route, path = _toRoute.path, params = _toRoute.params;
                 data = this.components[route];
 
                 if (data) {
@@ -345,7 +369,10 @@ var Router = function () {
                               if (err) return reject(err);
                               resolve({
                                 Component: data.Component,
-                                ctx: { xhr: xhr, err: data.err }
+                                ctx: {
+                                  xhr: xhr,
+                                  err: data.err
+                                }
                               });
                             });
                           });
@@ -477,7 +504,21 @@ function getURL() {
 }
 
 function toRoute(path) {
-  return path.replace(/\/$/, '') || '/';
+  var params = {};
+  var cpath = path.replace(/\/$/, '') || '/';
+  var match = (0, _reactRouter.matchPattern)('/test/:param1/:param2', {
+    pathname: path
+  }, false, null);
+  if (match) {
+    params = match.params;
+    cpath = cpath.slice(0, cpath.indexOf('/p'));
+  }
+
+  return {
+    route: path.replace(/\/$/, '') || '/',
+    cpath: cpath,
+    params: params
+  };
 }
 
 function toJSONUrl(route) {
@@ -496,7 +537,10 @@ function loadComponent(url, fn) {
     }
 
     var Component = module.default || module;
-    fn(null, { Component: Component, err: data.err });
+    fn(null, {
+      Component: Component,
+      err: data.err
+    });
   });
 }
 
