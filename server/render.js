@@ -84,7 +84,7 @@ export function errorToJSON(err) {
 function getPath(url) {
   console.log('url', url);
   var params = {};
-  var cpath = url.replace(/\/$/, '') || '/';
+  var cpath = url.replace(/\/$/, '').replace(/\.json$/, '') || '/';
   var match = matchPattern('/test/:param1/:param2', {
     pathname: url
   }, false, null);
@@ -95,6 +95,6 @@ function getPath(url) {
   return {
     path: parse(url || '/').pathname.replace(/\.json$/, ''),
     params,
-    cpath
+    cpath: cpath.replace(/\.json$/, '')
   }
 }
