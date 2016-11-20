@@ -13,15 +13,15 @@ import App from '../lib/app'
 import { matchPattern } from 'react-router'
 
 export async function render(url, ctx = {}, {dir = process.cwd(), dev = false, staticMarkup = false} = {}) {
-  const {path = cpath, params} = getPath(url)
-  const mod = await requireModule(join(dir, '.next', 'dist', 'pages', path))
+  const {path, cpath, params} = getPath(url)
+  const mod = await requireModule(join(dir, '.next', 'dist', 'pages', cpath))
   const Component = mod.default || mod
 
   const props = await (Component.getInitialProps ? Component.getInitialProps({
     ...ctx,
     params
   }) : {})
-  const component = await read(join(dir, '.next', 'bundles', 'pages', path))
+  const component = await read(join(dir, '.next', 'bundles', 'pages', cpath))
 
   const {html, css, ids} = renderStatic(() => {
     const app = createElement(App, {
@@ -55,8 +55,8 @@ export async function render(url, ctx = {}, {dir = process.cwd(), dev = false, s
 }
 
 export async function renderJSON(url, {dir = process.cwd()} = {}) {
-  const {path} = getPath(url)
-  const component = await read(join(dir, '.next', 'bundles', 'pages', path))
+  const {path, cpath} = getPath(url)
+  const component = await read(join(dir, '.next', 'bundles', 'pages', cpath))
   return {
     component
   }
@@ -82,6 +82,7 @@ export function errorToJSON(err) {
 }
 
 function getPath(url) {
+  console.log('url', url);
   var params = {};
   var cpath = url.replace(/\/$/, '') || '/';
   var match = matchPattern('/test/:param1/:param2', {
@@ -89,7 +90,7 @@ function getPath(url) {
   }, false, null);
   if (match) {
     params = match.params;
-    url = cpath.slice(0, cpath.indexOf('/p')).replace(/\.json$/, '');
+    cpath = '/test/wow';
   }
   return {
     path: parse(url || '/').pathname.replace(/\.json$/, ''),

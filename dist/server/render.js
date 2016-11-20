@@ -29,15 +29,15 @@ var render = exports.render = function () {
         _ref2$staticMarkup = _ref2.staticMarkup,
         staticMarkup = _ref2$staticMarkup === undefined ? false : _ref2$staticMarkup;
 
-    var _getPath, _getPath$path, path, params, mod, Component, props, component, _renderStatic, html, css, ids, head, config, doc;
+    var _getPath, path, cpath, params, mod, Component, props, component, _renderStatic, html, css, ids, head, config, doc;
 
     return _regenerator2.default.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _getPath = getPath(url), _getPath$path = _getPath.path, path = _getPath$path === undefined ? cpath : _getPath$path, params = _getPath.params;
+            _getPath = getPath(url), path = _getPath.path, cpath = _getPath.cpath, params = _getPath.params;
             _context.next = 3;
-            return (0, _require2.default)((0, _path.join)(dir, '.next', 'dist', 'pages', path));
+            return (0, _require2.default)((0, _path.join)(dir, '.next', 'dist', 'pages', cpath));
 
           case 3:
             mod = _context.sent;
@@ -50,7 +50,7 @@ var render = exports.render = function () {
           case 7:
             props = _context.sent;
             _context.next = 10;
-            return (0, _read2.default)((0, _path.join)(dir, '.next', 'bundles', 'pages', path));
+            return (0, _read2.default)((0, _path.join)(dir, '.next', 'bundles', 'pages', cpath));
 
           case 10:
             component = _context.sent;
@@ -104,15 +104,15 @@ var renderJSON = exports.renderJSON = function () {
         _ref4$dir = _ref4.dir,
         dir = _ref4$dir === undefined ? process.cwd() : _ref4$dir;
 
-    var _getPath2, path, component;
+    var _getPath2, path, cpath, component;
 
     return _regenerator2.default.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _getPath2 = getPath(url), path = _getPath2.path;
+            _getPath2 = getPath(url), path = _getPath2.path, cpath = _getPath2.cpath;
             _context2.next = 3;
-            return (0, _read2.default)((0, _path.join)(dir, '.next', 'bundles', 'pages', path));
+            return (0, _read2.default)((0, _path.join)(dir, '.next', 'bundles', 'pages', cpath));
 
           case 3:
             component = _context2.sent;
@@ -201,6 +201,7 @@ function errorToJSON(err) {
 }
 
 function getPath(url) {
+  console.log('url', url);
   var params = {};
   var cpath = url.replace(/\/$/, '') || '/';
   var match = (0, _reactRouter.matchPattern)('/test/:param1/:param2', {
@@ -208,7 +209,7 @@ function getPath(url) {
   }, false, null);
   if (match) {
     params = match.params;
-    url = cpath.slice(0, cpath.indexOf('/p')).replace(/\.json$/, '');
+    cpath = '/test/wow';
   }
   return {
     path: (0, _url.parse)(url || '/').pathname.replace(/\.json$/, ''),

@@ -32557,7 +32557,7 @@
 	    var parsed = (0, _url.parse)(url, true);
 
 	    // represents the current component key
-	    this.route = toRoute(parsed.pathname).route;
+	    this.route = toRoute(parsed.pathname).path;
 
 	    // set up the component cache (by route keys)
 	    this.components = (0, _defineProperty3.default)({}, this.route, initialData);
@@ -32584,7 +32584,7 @@
 	          pathname = _parse.pathname,
 	          query = _parse.query;
 
-	      var route = (e.state || {}).route || toRoute(pathname).route;
+	      var route = (e.state || {}).route || toRoute(pathname).path;
 
 	      _promise2.default.resolve().then((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
 	        var data, ctx, props;
@@ -32745,7 +32745,7 @@
 	                params = toRoute(pathname).params;
 
 
-	                if (!route) route = toRoute(pathname).route;
+	                if (!route) route = toRoute(pathname).path;
 
 	                this.abortComponentLoad();
 
@@ -32837,17 +32837,20 @@
 	      var _ref5 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee5(url) {
 	        var _this2 = this;
 
-	        var _toRoute, _toRoute$route, route, path, params, data;
+	        var _toRoute, cpath, path, params, route, data;
 
 	        return _regenerator2.default.wrap(function _callee5$(_context5) {
 	          while (1) {
 	            switch (_context5.prev = _context5.next) {
 	              case 0:
-	                _toRoute = toRoute((0, _url.parse)(url).pathname), _toRoute$route = _toRoute.route, route = _toRoute$route === undefined ? cpath : _toRoute$route, path = _toRoute.path, params = _toRoute.params;
+	                _toRoute = toRoute((0, _url.parse)(url).pathname), cpath = _toRoute.cpath, path = _toRoute.path, params = _toRoute.params;
+	                route = cpath;
+
+	                console.log('route', route);
 	                data = this.components[route];
 
 	                if (data) {
-	                  _context5.next = 4;
+	                  _context5.next = 6;
 	                  break;
 	                }
 
@@ -32893,12 +32896,12 @@
 	                      }
 	                    }
 	                  }, _callee4, _this2);
-	                })(), 't0', 4);
+	                })(), 't0', 6);
 
-	              case 4:
+	              case 6:
 	                return _context5.abrupt('return', data);
 
-	              case 5:
+	              case 7:
 	              case 'end':
 	                return _context5.stop();
 	            }
@@ -33011,11 +33014,11 @@
 	  }, false, null);
 	  if (match) {
 	    params = match.params;
-	    cpath = cpath.slice(0, cpath.indexOf('/p'));
+	    cpath = '/test/all';
 	  }
 
 	  return {
-	    route: path.replace(/\/$/, '') || '/',
+	    path: path.replace(/\/$/, '') || '/',
 	    cpath: cpath,
 	    params: params
 	  };
