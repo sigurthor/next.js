@@ -90,7 +90,7 @@ function getPath(url) {
   }, false, null);
   if (match) {
     params = match.params;
-    cpath = '/test/wow';
+    cpath = '/test/_all';
   }
   return {
     path: parse(url || '/').pathname.replace(/\.json$/, ''),
