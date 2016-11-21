@@ -32557,9 +32557,10 @@
 	    var parsed = (0, _url.parse)(url, true);
 
 	    // represents the current component key
-	    this.route = toRoute(parsed.pathname).path;
+	    this.route = toRoute(parsed.pathname).cpath;
 
 	    // set up the component cache (by route keys)
+
 	    this.components = (0, _defineProperty3.default)({}, this.route, initialData);
 
 	    this.pathname = parsed.pathname;
@@ -32584,7 +32585,8 @@
 	          pathname = _parse.pathname,
 	          query = _parse.query;
 
-	      var route = (e.state || {}).route || toRoute(pathname).path;
+	      var route = (e.state || {}).route || toRoute(pathname).cpath;
+	      var params = toRoute(pathname).params;
 
 	      _promise2.default.resolve().then((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
 	        var data, ctx, props;
@@ -32599,7 +32601,8 @@
 	                data = _context.sent;
 	                ctx = (0, _extends3.default)({}, data.ctx, {
 	                  pathname: pathname,
-	                  query: query
+	                  query: query,
+	                  params: params
 	                });
 	                _context.next = 6;
 	                return _this.getInitialProps(data.Component, ctx);
@@ -32608,7 +32611,7 @@
 	                props = _context.sent;
 
 
-	                _this.route = route;
+	                _this.route = toRoute(pathname).cpath;
 	                _this.set(getURL(), (0, _extends3.default)({}, data, {
 	                  props: props
 	                }));
@@ -32620,11 +32623,13 @@
 	          }
 	        }, _callee, _this);
 	      }))).catch(function (err) {
+	        console.log('error', err);
 	        if (err.cancelled) return;
 
 	        // the only way we can appropriately handle
 	        // this failure is deferring to the browser
 	        // since the URL has already changed
+
 	        window.location.reload();
 	      });
 	    }
@@ -32651,6 +32656,7 @@
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
 	              case 0:
+
 	                delete this.components[route];
 
 	                if (!(route !== this.route)) {
@@ -32745,7 +32751,7 @@
 	                params = toRoute(pathname).params;
 
 
-	                if (!route) route = toRoute(pathname).path;
+	                if (!route) route = toRoute(pathname).cpath;
 
 	                this.abortComponentLoad();
 
@@ -32845,12 +32851,10 @@
 	              case 0:
 	                _toRoute = toRoute((0, _url.parse)(url).pathname), cpath = _toRoute.cpath, path = _toRoute.path, params = _toRoute.params;
 	                route = cpath;
-
-	                console.log('route', route);
-	                data = this.components[route];
+	                data = this.components[cpath];
 
 	                if (data) {
-	                  _context5.next = 6;
+	                  _context5.next = 5;
 	                  break;
 	                }
 
@@ -32888,7 +32892,7 @@
 	                            _this2.componentLoadCancel = null;
 	                          }
 
-	                          _this2.components[route] = data;
+	                          _this2.components[cpath] = data;
 
 	                        case 7:
 	                        case 'end':
@@ -32896,12 +32900,12 @@
 	                      }
 	                    }
 	                  }, _callee4, _this2);
-	                })(), 't0', 6);
+	                })(), 't0', 5);
 
-	              case 6:
+	              case 5:
 	                return _context5.abrupt('return', data);
 
-	              case 7:
+	              case 6:
 	              case 'end':
 	                return _context5.stop();
 	            }
@@ -33014,7 +33018,7 @@
 	  }, false, null);
 	  if (match) {
 	    params = match.params;
-	    cpath = '/test/all';
+	    cpath = '/test/_all';
 	  }
 
 	  return {
@@ -35266,7 +35270,10 @@
 	          router = _props.router,
 	          headManager = _props.headManager;
 
-	      return { router: router, headManager: headManager };
+	      return {
+	        router: router,
+	        headManager: headManager
+	      };
 	    }
 	  }, {
 	    key: 'render',
@@ -35303,6 +35310,7 @@
 	      router = props.router;
 	  var route = router.route;
 
+	  console.log('router state', route);
 	  var url = {
 	    query: router.query,
 	    pathname: router.pathname,
@@ -35325,7 +35333,9 @@
 
 	  return {
 	    Component: Component,
-	    props: (0, _extends3.default)({}, props.props, { url: url })
+	    props: (0, _extends3.default)({}, props.props, {
+	      url: url
+	    })
 	  };
 	}
 

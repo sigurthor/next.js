@@ -93,7 +93,10 @@ var App = function (_Component) {
           router = _props.router,
           headManager = _props.headManager;
 
-      return { router: router, headManager: headManager };
+      return {
+        router: router,
+        headManager: headManager
+      };
     }
   }, {
     key: 'render',
@@ -130,6 +133,7 @@ function propsToState(props) {
       router = props.router;
   var route = router.route;
 
+  console.log('router state', route);
   var url = {
     query: router.query,
     pathname: router.pathname,
@@ -152,6 +156,8 @@ function propsToState(props) {
 
   return {
     Component: Component,
-    props: (0, _extends3.default)({}, props.props, { url: url })
+    props: (0, _extends3.default)({}, props.props, {
+      url: url
+    })
   };
 }
